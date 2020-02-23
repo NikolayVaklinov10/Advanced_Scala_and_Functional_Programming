@@ -94,7 +94,7 @@ object AdvancedPatternMatching extends App {
   val myList: MyList[Int] = Cons(1, Cons(2, Cons(3, Empty)))
   val decomposed = myList match {
     case MyList(1, 2, _*) => "starting with 1, 2"
-    case - => "something else"
+    case _ => "something else"
   }
   println(decomposed)
 
@@ -118,6 +118,8 @@ object AdvancedPatternMatching extends App {
     case PersonWrapper(n) => s"This person's name $n"
     case _ => "An alien"
   })
+
+
 
 }
 
