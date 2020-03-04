@@ -20,7 +20,7 @@ object FuturesPromises extends App{
   println(aFuture.value) // Option[Try[Int]]
 
   println("Waiting on the future")
-  aFuture.onComplete(t => t match{
+  aFuture.onComplete({
     case Success(meaningOfLife) => println(s"the meaning of life is $meaningOfLife")
     case Failure(e) => println(s"I have failed with $e")
   })
