@@ -93,19 +93,30 @@ object TypeClasses extends App{
   println(HTMLSerializer[User].serialize(john))
 
 
-  /*
-  Exercise: implement the TC pattern for the Equality tc.
-   */
-
-  object Equal{
-    def apply[T](a: T, b: T)(implicit equalizer: Equal[T]): Boolean =
-      equalizer.apply(a, b)
+  // part 3
+  implicit class HTMLEnrichment[T](value: T){
+    def toHTML(implicit serializer: HTMLSerializer[T]): String = serializer.serialize(value)
   }
 
-  val anotherJohn = User("John", 45, "anotherJohn@rtjvm.com")
-  println(Equal.apply(john, anotherJohn))
+    println(john.toHTML)  // println(new HTMLEnrichment[User](john).toHTML(UserSerialize))
 
 
+  // context bounds
+  def htmlBoilerplate[T](content: T)(implicit serializer: HTMLSerializer[T]): String =
+    s"<html><body> ${content.toHTML(serializer)}</body></html>"
+
+  def htmlSugar[T : HTMLSerializer](content: T):String = {
+    val serializer = implicitly[HTMLSerializer[T]]
+    s"<html><body> ${content.toHTML(serializer)}</body></html>"
+  }
+
+
+  // implicitly
+  case class Permissions(mask: String)
+  implicit val defaultPermissions: Permissions = Permissions("0744")
+
+  // in some other part of the code
+  val standardPerms = implicitly[Permissions]
 
 
 }
